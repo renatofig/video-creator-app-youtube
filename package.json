@@ -1,0 +1,55 @@
+{
+  "name": "video-creator-app",
+  "version": "1.0.0",
+  "description": "Aplicativo para automatizar a criação de vídeos de histórias.",
+  "main": "main.js",
+  "author": "Seu Nome",
+  "scripts": {
+    "start": "electron .",
+    "dist": "electron-builder"
+  },
+  "dependencies": {
+    "@google-cloud/text-to-speech": "^5.3.0",
+    "form-data": "^4.0.0",
+    "googleapis": "^140.0.1",
+    "node-cron": "^3.0.3",
+    "sharp": "^0.34.3"
+  },
+  "devDependencies": {
+    "electron": "^28.2.0",
+    "electron-builder": "^24.13.3"
+  },
+  "build": {
+    "appId": "com.seu-nome.videocreator",
+    "productName": "Video Creator App",
+    "win": {
+      "target": "nsis"
+    },
+    "extraResources": [
+      {
+        "from": "resources/bin",
+        "to": "bin",
+        "filter": [
+          "**/*"
+        ]
+      },
+      {
+        "from": "resources/media",
+        "to": "default-media",
+        "filter": [
+          "**/*"
+        ]
+      },
+      {
+        "from": "resources/config.json",
+        "to": "config.json"
+      }
+    ],
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "runAfterFinish": true
+    }
+  }
+}

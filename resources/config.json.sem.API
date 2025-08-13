@@ -1,0 +1,26 @@
+{
+  "musicasPath": "",
+  "introPath": "",
+  "backgroundsPath": "",
+  "outputDir": "",
+  "geminiApiKey": "",
+  "googleSearchApiKey": "",
+  "searchEngineId": "",
+  "youtubeClientId": "",
+  "youtubeClientSecret": "",
+  "selectedThemes": [
+    "futebol",
+    "ciencia"
+  ],
+  "freeformPrompt": "",
+  "audioDuration": "5",
+  "uploadToYouTube": true,
+  "deleteAfterUpload": false,
+  "scheduleFrequency": "daily",
+  "scheduleDayOfWeek": "1",
+  "scheduleDayOfMonth": "1",
+  "selectedHours": [
+    9,
+    18
+  ]
+}
