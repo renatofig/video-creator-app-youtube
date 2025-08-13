@@ -8,7 +8,7 @@
 
 *   **Roteiros com IA:** Utiliza a API Gemini do Google para criar roteiros únicos e coesos com base em diversos temas, como notícias, curiosidades científicas ou histórias infantis.
 *   **Busca de Notícias:** Integra-se com a API de Pesquisa Customizada do Google para coletar as notícias mais recentes sobre temas específicos (Futebol, Pescados), garantindo que o conteúdo seja sempre atual.
-*   **Geração de Imagens por IA:** Usa a API da Stability AI para criar imagens de fundo e thumbnails visualmente atraentes e contextualmente relevantes para o roteiro do vídeo.
+*   **Geração de Imagens por IA:** Usa a API da Stability AI (opcional e paga) para criar imagens de fundo e thumbnails visualmente atraentes e contextualmente relevantes para o roteiro do vídeo.
 *   **Narração Realista:** Converte o roteiro gerado em áudio MP3 usando a API Text-to-Speech do Google Cloud, com uma seleção inteligente de vozes para combinar com o tom do conteúdo.
 *   **Automação de Edição:** Utiliza FFmpeg para compor automaticamente narração, música de fundo, vídeos de introdução e visuais (incluindo slideshows com efeitos Ken Burns).
 *   **Criação de Thumbnails:** Gera automaticamente uma thumbnail para o YouTube, sobrepondo o título do vídeo em uma das imagens criadas pela IA ou em um frame extraído do vídeo de fundo.
