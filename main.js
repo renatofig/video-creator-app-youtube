@@ -360,6 +360,12 @@ async function runFullProcess(theme, runParams, webContents) {
         
         storyData = await callGeminiWithRetries(config, scriptRequestPrompt, webContents);
         if (!storyData || !storyData.roteiro) throw new Error("A IA não conseguiu gerar um roteiro válido.");
+        
+        // <<< CORREÇÃO DO LIMITE DE TÍTULO >>>
+        if (storyData.titulo.length > 100) {
+            logToRenderer(webContents, `   - AVISO: Título gerado pela IA é muito longo (${storyData.titulo.length} caracteres). Truncando para 100.`);
+            storyData.titulo = storyData.titulo.substring(0, 100).trim();
+        }
 
         const storyTitle = storyData.titulo;
         sessionHistory.add(storyTitle);
@@ -510,23 +516,24 @@ async function runFullProcess(theme, runParams, webContents) {
 
 async function handleApiError(response, model, webContents) { if (response.status === 429) { logToRenderer(webContents, `   - AVISO: Limite de cota (Rate Limit) atingido para o modelo ${model}.`); return; } logToRenderer(webContents, `   - Erro na chamada com ${model}. Status: ${response.status}`); }
 
-// <<< CORREÇÃO DE PARSE DE JSON >>>
 function cleanAndParseJson(rawText) {
-    // 1. Encontra o bloco JSON
     const jsonMatch = rawText.match(/\{[\s\S]*\}/);
-    if (!jsonMatch) {
-        throw new Error("Nenhum bloco JSON encontrado na resposta da API.");
-    }
+    if (!jsonMatch) throw new Error("Nenhum bloco JSON encontrado na resposta da API.");
     let jsonString = jsonMatch[0];
-
-    // 2. Remove quebras de linha dentro das strings
-    jsonString = jsonString.replace(/:\s*"(.*?)"/gs, (match, group1) => {
-        const cleanedGroup = group1.replace(/\r\n|\n|\r/g, ' ').replace(/"/g, '\\"');
-        return `: "${cleanedGroup}"`;
-    });
-    
-    // 3. Tenta fazer o parse
-    return JSON.parse(jsonString);
+    jsonString = jsonString.replace(/\\n/g, "\\n")
+                         .replace(/\\'/g, "\\'")
+                         .replace(/\\"/g, '\\"')
+                         .replace(/\\&/g, "\\&")
+                         .replace(/\\r/g, "\\r")
+                         .replace(/\\t/g, "\\t")
+                         .replace(/\\b/g, "\\b")
+                         .replace(/\\f/g, "\\f");
+    jsonString = jsonString.replace(/[\u0000-\u0019]+/g,"");
+    try {
+        return JSON.parse(jsonString);
+    } catch (error) {
+        throw new Error(`Falha ao fazer parse do JSON limpo: ${error.message}`);
+    }
 }
 
 
@@ -546,7 +553,7 @@ async function callGeminiWithRetries(config, promptString, webContents, isSilent
             if (response.ok) {
                 const data = await response.json();
                 const rawText = data?.candidates?.[0]?.content?.parts?.[0]?.text || '';
-                return cleanAndParseJson(rawText); // Usa a função de limpeza
+                return cleanAndParseJson(rawText);
             } else {
                 await handleApiError(response, flashModel, webContents);
                 throw new Error(`API retornou status ${response.status}`);
@@ -569,7 +576,7 @@ async function callGeminiWithRetries(config, promptString, webContents, isSilent
         if (response.ok) {
             const data = await response.json();
             const rawText = data?.candidates?.[0]?.content?.parts?.[0]?.text || '';
-            return cleanAndParseJson(rawText); // Usa a função de limpeza
+            return cleanAndParseJson(rawText);
         } else {
              await handleApiError(response, proModel, webContents);
         }
@@ -709,6 +716,9 @@ async function uploadToYouTube(videoPath, title, description, config, webContent
         logToRenderer(webContents, `   - ✅ VÍDEO ENVIADO! Link: https://www.youtube.com/watch?v=${videoId}`);
 
         if (thumbnailPath) {
+            logToRenderer(webContents, '   - Aguardando 5 segundos antes de enviar a thumbnail para evitar erros de quota por minuto...');
+            await new Promise(resolve => setTimeout(resolve, 5000));
+
             logToRenderer(webContents, '   - Lendo thumbnail para a memória...');
             try {
                 const thumbnailBuffer = await fs.promises.readFile(thumbnailPath);
