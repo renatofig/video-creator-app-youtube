@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Aplicativo para automatizar a criação de vídeos de histórias.",
   "main": "main.js",
-  "author": "Seu Nome",
+  "author": "Renato Figueiredo",
   "scripts": {
     "start": "electron .",
     "dist": "electron-builder"

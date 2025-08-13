@@ -289,7 +289,6 @@ async function runFullProcess(theme, runParams, webContents) {
     let storyData = null;
 
     try {
-        // --- 1. GERAÇÃO DE ROTEIRO ÚNICO ---
         let themeNames = {'futebol':'Notícias de Futebol','pescados':'Notícias de Pescados','ciencia':'Curiosidades Científicas','historinhas':'Historinhas Infantis','freeform':'Prompt Livre'}
         logToRenderer(webContents, "======================================");
         logToRenderer(webContents, `[${new Date().toLocaleString()}] Iniciando ciclo para o tema: ${themeNames[theme].toUpperCase()}`);
@@ -302,12 +301,27 @@ async function runFullProcess(theme, runParams, webContents) {
         const callToActionGenerico = `O roteiro deve começar com uma saudação e um convite para o espectador curtir o vídeo e se inscrever no canal, e terminar com um reforço do convite para se inscrever e ativar as notificações.`;
         const avoidanceInstruction = `Os seguintes temas e palavras-chave já foram abordados e devem ser EVITADOS: "${Array.from(youtubeKeywords).slice(0, 150).join(', ')}".`;
 
-        if (theme === 'ciencia') {
+        if (['ciencia', 'historinhas', 'freeform'].includes(theme)) {
             let uniqueTopic = null;
             let brainstormTries = 3;
+            let callToAction = callToActionGenerico;
+            
             while(brainstormTries-- > 0 && !uniqueTopic) {
-                logToRenderer(webContents, '   - Fase 1: Brainstorm de tópicos de Ciência com a IA...');
-                const topicPrompt = `Aja como um produtor de conteúdo científico especialista em encontrar nichos inexplorados. O canal já cobriu os tópicos populares. Gere uma lista de 10 títulos de vídeos sobre fatos surpreendentes ou descobertas recentes, focando em interseções de campos (ex: 'A Bioquímica do Medo') ou em tópicos de nicho (ex: 'O Paradoxo do Gato de Botas na Física Quântica'). Os títulos devem ser intrigantes e originais. ${avoidanceInstruction} Responda APENAS com a lista, um título por linha.`;
+                logToRenderer(webContents, `   - Fase 1: Brainstorm de tópicos de '${themeNames[theme]}' com a IA...`);
+                let topicPrompt = '';
+
+                switch (theme) {
+                    case 'ciencia':
+                        topicPrompt = `Aja como um produtor de conteúdo científico especialista em encontrar nichos inexplorados. O canal já cobriu os tópicos populares. Gere uma lista de 10 títulos de vídeos sobre fatos surpreendentes ou descobertas recentes, focando em interseções de campos (ex: 'A Bioquímica do Medo') ou em tópicos de nicho (ex: 'O Paradoxo do Gato de Botas na Física Quântica'). Os títulos devem ser intrigantes e originais. ${avoidanceInstruction} Responda APENAS com a lista, um título por linha.`;
+                        callToAction = callToActionCiencia;
+                        break;
+                    case 'historinhas':
+                        topicPrompt = `Aja como um autor criativo de livros infantis. O objetivo é criar histórias que fujam do comum. Gere uma lista de 10 títulos originais para novas historinhas. Pense em personagens inusitados (ex: 'O Caracol que Colecionava Ecos') e conflitos criativos (ex: 'A Menina que Precisava Desvendar o Mistério do Riso Perdido'). ${avoidanceInstruction} Responda APENAS com a lista, um título por linha.`;
+                        break;
+                    case 'freeform':
+                        topicPrompt = `Aja como um roteirista criativo. O tema central é "${config.freeformPrompt}". Gere uma lista de 10 títulos de vídeo que abordem este tema de ângulos completamente diferentes, inesperados e de nicho. Evite as abordagens mais óbvias. ${avoidanceInstruction} Responda APENAS com a lista, um título por linha.`;
+                        break;
+                }
                 
                 const topicListText = await callGeminiPlainText(config, topicPrompt, webContents);
                 const topics = topicListText.split('\n').map(t => t.replace(/^[0-9-.\s]*/, '').trim()).filter(Boolean);
@@ -317,58 +331,34 @@ async function runFullProcess(theme, runParams, webContents) {
                     const isDuplicate = topicKeywords.some(kw => youtubeKeywords.has(kw));
                     if (!isDuplicate) {
                         uniqueTopic = topic;
-                        logToRenderer(webContents, `   - Tópico original de Ciência selecionado: "${uniqueTopic}"`);
+                        logToRenderer(webContents, `   - Tópico original selecionado: "${uniqueTopic}"`);
                         break;
                     }
                 }
-                if (!uniqueTopic && brainstormTries > 0) logToRenderer(webContents, `   - AVISO: Nenhum tópico de Ciência 100% original na lista gerada. Tentando novamente...`);
+                if (!uniqueTopic && brainstormTries > 0) logToRenderer(webContents, `   - AVISO: Nenhum tópico 100% original na lista gerada. Tentando novamente...`);
             }
-            if (!uniqueTopic) throw new Error("Não foi possível gerar um tópico único de Ciência após várias tentativas.");
+            if (!uniqueTopic) throw new Error(`Não foi possível gerar um tópico único para o tema '${themeNames[theme]}' após várias tentativas.`);
             
-            scriptRequestPrompt = `Crie um roteiro completo para um vídeo com o título exato: "${uniqueTopic}". O roteiro deve ser cativante e informativo. ${callToActionCiencia} ${jsonRule}`;
+            scriptRequestPrompt = `Crie um roteiro completo para um vídeo com o título exato: "${uniqueTopic}". O roteiro deve ser cativante e informativo. ${callToAction} ${jsonRule}`;
 
-        } else {
-            // Lógica de 1 etapa para os outros temas
-            let maxTries = 7;
-            while (maxTries-- > 0) {
-                let dynamicPrompt = '';
-                switch (theme) {
-                    case 'historinhas':
-                        dynamicPrompt = `Aja como um autor criativo de histórias infantis. Sua missão é criar uma história completamente nova e original para um vídeo curto do YouTube. Invente um personagem principal único, um cenário mágico e um desafio interessante. A história deve ter um final feliz e uma lição de moral sutil. ${avoidanceInstruction} ${callToActionGenerico} ${jsonRule}`;
-                        break;
-                    case 'freeform':
-                        dynamicPrompt = `Aja como um roteiro criativo. O tema central é "${config.freeformPrompt}". Aborde este tema de uma maneira nova e inesperada. Encontre um fato surpreendente ou uma perspectiva que a maioria das pessoas não conhece. ${avoidanceInstruction} ${callToActionGenerico} ${jsonRule}`;
-                        break;
-                    case 'futebol':
-                        const newsContextFutebol = await searchGoogleForNews(config, webContents, 'últimas+notícias+futebol+brasileiro', config.searchEngineId);
-                        const callToActionFutebol = `O roteiro deve começar com "Se você é um apaixonado por futebol, já deixa o like..." e terminar com "...Para não perder nenhuma novidade, não se esqueça de curtir e se inscrever!".`;
-                        if (newsContextFutebol) { dynamicPrompt = `Aja como um redator de notícias esportivas. Com base nas seguintes notícias brutas de FUTEBOL BRASILEIRO: "${newsContextFutebol}". ${avoidanceInstruction} Crie um roteiro de notícias fluído e coeso.\nINSTRUÇÕES PARA O TÍTULO: 1. Analise todas as notícias e identifique o fato mais importante ou a notícia principal. 2. Crie um título que seja DIRETAMENTE baseado neste fato principal. Evite títulos genéricos (Ex: "Notícias do Futebol").\nINSTRUÇÕES PARA O ROTEIRO: 1. NÃO RESUMA OU GENERALIZE. Reescreva os fatos de forma direta e jornalística, mantendo nomes de jogadores, times, placares e outros detalhes específicos. 2. OMITA FONTES: Não mencione as fontes das notícias (ex: "segundo o site X"). 3. SEJA FACTUAL: Evite adicionar opiniões ou conteúdo genérico.\n${callToActionFutebol} ${jsonRule}`; } else { dynamicPrompt = `Crie um roteiro sobre um tema GERAL e ATUAL do futebol brasileiro. ${avoidanceInstruction} ${callToActionFutebol} ${jsonRule}`; }
-                        break;
-                    case 'pescados':
-                        if (!config.searchEngineIdPiscare) throw new Error("O 'ID Pesquisa Pescados (Tema 2) (CX)' não foi configurado.");
-                        const callToActionPiscare = `O roteiro deve terminar com "A Piscare Importadora traz para você as melhores notícias e os melhores pescados. Para saber mais, visite nosso site em piscareimportacao.com ou entre em contato pelo WhatsApp. Para mais informações e links, confira a descrição deste vídeo. Não se esqueça de curtir e se inscrever no canal para mais novidades do mundo dos pescados!".`;
-                        const randomQuery = PESCADOS_SEARCH_QUERIES[Math.floor(Math.random() * PESCADOS_SEARCH_QUERIES.length)]; logToRenderer(webContents, `   - Usando termo de busca aleatório: "${randomQuery || 'Qualquer novidade'}"`); const newsContextPiscare = await searchGoogleForNews(config, webContents, randomQuery, config.searchEngineIdPiscare); if (newsContextPiscare) { dynamicPrompt = `Aja como um âncora de um telejornal de agronegócios. Com base exclusivamente nas seguintes notícias sobre o mercado de PESCADOS: "${newsContextPiscare}". ${avoidanceInstruction}\nINSTRUÇÕES PARA O TÍTULO: 1. Analise todas as notícias e identifique o fato mais importante ou a notícia principal. 2. Crie um título que seja DIRETAMENTE baseado neste fato principal. Evite títulos genéricos. (Exemplo BOM: "Preço da Tilápia em Queda: Entenda os Impactos". Exemplo RUIM: "Panorama do Mercado de Pescados").\nINSTRUÇÕES PARA O ROTEIRO: 1. FOCO TOTAL: Use apenas informações sobre peixes, frutos do mar, aquicultura e pesca. IGNORE completamente notícias sobre outros setores. 2. NÃO RESUMA: Reescreva os fatos de forma direta e jornalística. 3. PROIBIDO CRIAR EXEMPLOS: Não crie descrições de empresas genéricas (ex: "Uma empresa nacional atua...") nem cite nomes de empresas que sejam fontes (ex: "Seafood Brasil"). Reporte apenas os fatos da notícia. 4. SEJA FACTUAL: Não adicione opiniões ou conteúdo "genérico".\n${callToActionPiscare} ${jsonRule}`; } else { dynamicPrompt = `Crie um roteiro sobre a importância do pescado na alimentação e na economia brasileira. ${avoidanceInstruction} ${callToActionPiscare} ${jsonRule}`; }
-                        break;
-                }
-
-                const potentialStory = await callGeminiWithRetries(config, dynamicPrompt, webContents, true);
-                if (potentialStory && potentialStory.roteiro) {
-                    const keywords = (potentialStory.titulo.toLowerCase().match(/\b(\w{5,})\b/g) || []);
-                    const isDuplicate = keywords.some(kw => youtubeKeywords.has(kw));
-                    if (!isDuplicate) {
-                        storyData = potentialStory;
-                        break;
-                    }
-                    logToRenderer(webContents, `   - AVISO: Roteiro duplicado detectado (palavras-chave: ${keywords.join(', ')}). Solicitando novo roteiro.`);
-                }
+        } else { // Lógica para temas de notícias
+            const usedTopics = Array.from(sessionHistory).join(', ');
+            const avoidanceInstructionNews = usedTopics ? `Estes títulos sobre o tema já foram usados: "${usedTopics}". Crie um roteiro com um TÍTULO E ÂNGULO COMPLETAMENTE NOVOS.` : '';
+            switch(theme) {
+                case 'futebol':
+                    const newsContextFutebol = await searchGoogleForNews(config, webContents, 'últimas+notícias+futebol+brasileiro', config.searchEngineId);
+                    const callToActionFutebol = `O roteiro deve começar com "Se você é um apaixonado por futebol, já deixa o like..." e terminar com "...Para não perder nenhuma novidade, não se esqueça de curtir e se inscrever!".`;
+                    if (newsContextFutebol) { scriptRequestPrompt = `Aja como um redator de notícias esportivas. Com base nas seguintes notícias brutas de FUTEBOL BRASILEIRO: "${newsContextFutebol}". ${avoidanceInstructionNews} Crie um roteiro de notícias fluído e coeso.\nINSTRUÇÕES PARA O TÍTULO: 1. Analise todas as notícias e identifique o fato mais importante ou a notícia principal. 2. Crie um título que seja DIRETAMENTE baseado neste fato principal. Evite títulos genéricos.\nINSTRUÇÕES PARA O ROTEIRO: 1. NÃO RESUMA OU GENERALIZE. Reescreva os fatos de forma direta e jornalística, mantendo nomes de jogadores, times, placares e outros detalhes específicos. 2. OMITA FONTES: Não mencione as fontes das notícias. 3. SEJA FACTUAL: Evite adicionar opiniões ou conteúdo genérico.\n${callToActionFutebol} ${jsonRule}`; } else { scriptRequestPrompt = `Crie um roteiro sobre um tema GERAL e ATUAL do futebol brasileiro. ${avoidanceInstructionNews} ${callToActionFutebol} ${jsonRule}`; }
+                    break;
+                case 'pescados':
+                    if (!config.searchEngineIdPiscare) throw new Error("O 'ID Pesquisa Pescados (Tema 2) (CX)' não foi configurado.");
+                    const callToActionPiscare = `O roteiro deve terminar com "A Piscare Importadora traz para você as melhores notícias e os melhores pescados. Para saber mais, visite nosso site em piscareimportacao.com ou entre em contato pelo WhatsApp. Para mais informações e links, confira a descrição deste vídeo. Não se esqueça de curtir e se inscrever no canal para mais novidades do mundo dos pescados!".`;
+                    const randomQuery = PESCADOS_SEARCH_QUERIES[Math.floor(Math.random() * PESCADOS_SEARCH_QUERIES.length)]; logToRenderer(webContents, `   - Usando termo de busca aleatório: "${randomQuery || 'Qualquer novidade'}"`); const newsContextPiscare = await searchGoogleForNews(config, webContents, randomQuery, config.searchEngineIdPiscare); if (newsContextPiscare) { scriptRequestPrompt = `Aja como um âncora de um telejornal de agronegócios. Com base exclusivamente nas seguintes notícias sobre o mercado de PESCADOS: "${newsContextPiscare}". ${avoidanceInstructionNews}\nINSTRUÇÕES PARA O TÍTULO: 1. Analise todas as notícias e identifique o fato mais importante ou a notícia principal. 2. Crie um título que seja DIRETAMENTE baseado neste fato principal. Evite títulos genéricos.\nINSTRUÇÕES PARA O ROTEIRO: 1. FOCO TOTAL: Use apenas informações sobre peixes, frutos do mar, aquicultura e pesca. IGNORE completamente notícias sobre outros setores. 2. NÃO RESUMA: Reescreva os fatos de forma direta e jornalística. 3. PROIBIDO CRIAR EXEMPLOS: Não crie descrições de empresas genéricas nem cite nomes de empresas que sejam fontes. Reporte apenas os fatos da notícia. 4. SEJA FACTUAL: Não adicione opiniões ou conteúdo "genérico".\n${callToActionPiscare} ${jsonRule}`; } else { scriptRequestPrompt = `Crie um roteiro sobre a importância do pescado na alimentação e na economia brasileira. ${avoidanceInstructionNews} ${callToActionPiscare} ${jsonRule}`; }
+                    break;
             }
-            if (!storyData) throw new Error(`Não foi possível gerar um roteiro único para o tema '${themeNames[theme]}' após várias tentativas.`);
-        }
-
-        if (!storyData && scriptRequestPrompt) {
-            storyData = await callGeminiWithRetries(config, scriptRequestPrompt, webContents);
         }
         
+        storyData = await callGeminiWithRetries(config, scriptRequestPrompt, webContents);
         if (!storyData || !storyData.roteiro) throw new Error("A IA não conseguiu gerar um roteiro válido.");
 
         const storyTitle = storyData.titulo;
@@ -520,6 +510,26 @@ async function runFullProcess(theme, runParams, webContents) {
 
 async function handleApiError(response, model, webContents) { if (response.status === 429) { logToRenderer(webContents, `   - AVISO: Limite de cota (Rate Limit) atingido para o modelo ${model}.`); return; } logToRenderer(webContents, `   - Erro na chamada com ${model}. Status: ${response.status}`); }
 
+// <<< CORREÇÃO DE PARSE DE JSON >>>
+function cleanAndParseJson(rawText) {
+    // 1. Encontra o bloco JSON
+    const jsonMatch = rawText.match(/\{[\s\S]*\}/);
+    if (!jsonMatch) {
+        throw new Error("Nenhum bloco JSON encontrado na resposta da API.");
+    }
+    let jsonString = jsonMatch[0];
+
+    // 2. Remove quebras de linha dentro das strings
+    jsonString = jsonString.replace(/:\s*"(.*?)"/gs, (match, group1) => {
+        const cleanedGroup = group1.replace(/\r\n|\n|\r/g, ' ').replace(/"/g, '\\"');
+        return `: "${cleanedGroup}"`;
+    });
+    
+    // 3. Tenta fazer o parse
+    return JSON.parse(jsonString);
+}
+
+
 async function callGeminiWithRetries(config, promptString, webContents, isSilent = false) {
     const flashModel = 'gemini-1.5-flash-latest';
     const proModel = 'gemini-1.5-pro-latest';
@@ -536,10 +546,7 @@ async function callGeminiWithRetries(config, promptString, webContents, isSilent
             if (response.ok) {
                 const data = await response.json();
                 const rawText = data?.candidates?.[0]?.content?.parts?.[0]?.text || '';
-                const jsonMatch = rawText.match(/\{[\s\S]*\}/);
-                if (jsonMatch) {
-                    return JSON.parse(jsonMatch[0]);
-                }
+                return cleanAndParseJson(rawText); // Usa a função de limpeza
             } else {
                 await handleApiError(response, flashModel, webContents);
                 throw new Error(`API retornou status ${response.status}`);
@@ -562,10 +569,7 @@ async function callGeminiWithRetries(config, promptString, webContents, isSilent
         if (response.ok) {
             const data = await response.json();
             const rawText = data?.candidates?.[0]?.content?.parts?.[0]?.text || '';
-            const jsonMatch = rawText.match(/\{[\s\S]*\}/);
-            if (jsonMatch) {
-                return JSON.parse(jsonMatch[0]);
-            }
+            return cleanAndParseJson(rawText); // Usa a função de limpeza
         } else {
              await handleApiError(response, proModel, webContents);
         }
@@ -746,7 +750,7 @@ async function checkYouTubeForDuplicates(config, webContents) {
         
         let allItems = [];
         let nextPageToken = null;
-        let pagesToFetch = 2; // Para buscar até 100 vídeos (50 por página)
+        let pagesToFetch = 2; 
 
         youtubeKeywords.clear();
 
@@ -760,16 +764,16 @@ async function checkYouTubeForDuplicates(config, webContents) {
                 playlistParams.pageToken = nextPageToken;
             }
             const playlistResponse = await youtube.playlistItems.list(playlistParams);
-            allItems = allItems.concat(playlistResponse.data.items);
+            if(playlistResponse.data.items) allItems = allItems.concat(playlistResponse.data.items);
             nextPageToken = playlistResponse.data.nextPageToken;
-            if (!nextPageToken) break; // Sai do loop se não houver mais páginas
+            if (!nextPageToken) break; 
         }
         
         for (const item of allItems) {
             const desc = item.snippet.description || '';
             const title = item.snippet.title || '';
             const content = `${title} ${desc}`.toLowerCase();
-            const keywords = content.match(/\b(\w{5,})\b/g) || []; // Pega palavras com 5+ letras para ser mais específico
+            const keywords = content.match(/\b(\w{5,})\b/g) || [];
             keywords.forEach(kw => youtubeKeywords.add(kw));
         }
         logToRenderer(webContents, `   - Verificados ${allItems.length} vídeos recentes. Banco de dados com ${youtubeKeywords.size} palavras-chave únicas.`);
