@@ -1,6 +1,6 @@
 # Video Creator App
 
-**Video Creator App** é um poderoso e gratuito aplicativo de desktop, construído com Electron, projetado para automatizar completamente o processo de criação de vídeos para o YouTube. A ferramenta utiliza Inteligência Artificial para gerar roteiros, buscar notícias, criar imagens e sintetizar narrações, transformando temas pré-definidos ou prompts livres em vídeos prontos para publicação com apenas alguns cliques.
+**Video Creator App** é um poderoso e gratuito aplicativo de desktop em PT-BR e EN-US, construído com Electron, projetado para automatizar completamente o processo de criação de vídeos para o YouTube. A ferramenta utiliza Inteligência Artificial para gerar roteiros, buscar notícias, criar imagens e sintetizar narrações, transformando temas pré-definidos ou prompts livres em vídeos prontos para publicação com apenas alguns cliques.
 
 ## ✨ Funcionalidades Principais
 
