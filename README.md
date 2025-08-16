@@ -4,37 +4,14 @@
 
 ## ✨ Funcionalidades Principais
 
-*   **Geração de Conteúdo Multi-Tema com IA:** Utiliza a API Gemini para criar roteiros únicos sobre diversos temas, como Notícias de Futebol, Notícias de Pescados, Curiosidades Científicas, Historinhas Infantis ou um prompt totalmente livre e personalizável.
-
-*   **Internacionalização (PT-BR / EN-US):** Suporte completo para criação de conteúdo em Português do Brasil e Inglês Americano, adaptando prompts, vozes e textos da interface.
-
-*   **Busca de Notícias em Tempo Real:** Integra-se com a API de Pesquisa do Google para coletar as notícias mais recentes sobre temas específicos, garantindo que o conteúdo seja sempre atual e relevante.
-
-*   **Geração de Mídia Flexível:**
-    *   **Imagens com IA:** Utiliza a API da Stability AI para criar imagens de fundo e thumbnails visualmente atraentes e contextualmente relevantes.
-    *   **Slideshows Locais:** Monta automaticamente slideshows com efeitos Ken Burns a partir de imagens em pastas locais, organizadas por tema.
-    *   **Vídeos de Fundo:** Suporta o uso de vídeos de fundo pré-existentes, também selecionados por tema.
-
-*   **Branding de Vídeo Avançado:**
-    *   **Vinhetas e Finalizações:** Permite a composição de introduções (temáticas da pasta + vinheta com logo) e finalizações com logo animado.
-    *   **Sobreposição de Logo:** Anima e sobrepõe seu logo (arquivo .png) em vídeos de vinheta ou em fundos gerados dinamicamente.
-
-*   **Narração Realista com IA:** Converte roteiros em áudio MP3 usando a API Text-to-Speech do Google Cloud, com uma seleção inteligente de vozes que se adaptam ao tom e idioma do conteúdo.
-
-*   **Otimização SEO Completa:**
-    *   **Títulos e Descrições:** A IA gera títulos e descrições otimizados para busca e engajamento.
-    *   **Tags Relevantes:** Gera automaticamente um conjunto de tags de cauda curta e longa para maximizar a visibilidade.
-    *   **Thumbnails Personalizadas:** Cria uma thumbnail para o YouTube, sobrepondo o título do vídeo em uma imagem gerada ou em um frame do vídeo de fundo.
-
-*   **Prevenção de Conteúdo Duplicado:** Verifica os títulos dos últimos vídeos do seu canal no YouTube e o histórico da sessão atual para evitar a criação de vídeos sobre tópicos repetidos.
-
-*   **Modo Lote para Múltiplos Canais:** Carrega configurações específicas (`.json`) para cada tema, permitindo que uma única execução em lote publique vídeos em diferentes canais do YouTube, com diferentes pastas de saída, descrições e branding.
-
-*   **Agendamento Detalhado e Automação de Inicialização:**
-    *   Crie e envie vídeos imediatamente ou agende execuções em horários específicos, com frequência diária, semanal ou mensal.
-    *   Pode ser configurado para iniciar junto com o sistema operacional e começar a automação automaticamente.
-
-*   **Upload Direto para o YouTube:** Após a criação, o aplicativo pode fazer o upload do vídeo finalizado, título, descrição, tags e thumbnail diretamente para o seu canal do YouTube, com a opção de apagar os arquivos locais após o envio bem-sucedido.
+*   **Roteiros com IA:** Utiliza a API Gemini do Google para criar roteiros únicos e coesos com base em diversos temas, como notícias, curiosidades científicas ou histórias infantis.
+*   **Busca de Notícias:** Integra-se com a API de Pesquisa Customizada do Google para coletar as notícias mais recentes sobre temas específicos (Futebol, Pescados), garantindo que o conteúdo seja sempre atual.
+*   **Geração de Imagens por IA:** Usa a API da Stability AI (opcional e paga) para criar imagens de fundo e thumbnails visualmente atraentes e contextualmente relevantes para o roteiro do vídeo.
+*   **Narração Realista:** Converte o roteiro gerado em áudio MP3 usando a API Text-to-Speech do Google Cloud, com uma seleção inteligente de vozes para combinar com o tom do conteúdo.
+*   **Automação de Edição:** Utiliza FFmpeg para compor automaticamente narração, música de fundo, vídeos de introdução e visuais (incluindo slideshows com efeitos Ken Burns).
+*   **Criação de Thumbnails:** Gera automaticamente uma thumbnail para o YouTube, sobrepondo o título do vídeo em uma das imagens criadas pela IA ou em um frame extraído do vídeo de fundo.
+*   **Agendamento e Publicação:** Possui um sistema de agendamento flexível que permite programar a criação e o upload de vídeos em horários específicos, de forma diária, semanal ou mensal.
+*   **Upload para o YouTube:** Após a criação, o aplicativo pode fazer o upload do vídeo finalizado diretamente para um canal do YouTube especificado, incluindo título, descrição e a thumbnail gerada.
 
 ---
 
@@ -76,9 +53,9 @@ Com os pré-requisitos instalados, siga estes passos:
 
 3.  **Configure suas chaves de API:**
     *   Inicie o aplicativo uma vez para que ele crie o arquivo `config.json` na sua pasta de dados de usuário (o local será mostrado no log do aplicativo ao iniciar).
-    *   Abra o aplicativo, vá para a aba "APIs" e preencha todas as suas chaves de API necessárias (Gemini, Google Cloud, Stability, etc.).
+    *   Abra o aplicativo, vá para a aba "APIs" e preencha todas as suas chaves de API necessárias (Gemini, Google Search, Stability, etc.).
     *   Configure também as credenciais do YouTube na aba "YouTube".
-    *   Clique em "Salvar" para gravar suas chaves no `config.json`. **Use o botão de Ajuda no app para um guia detalhado sobre como obter cada chave.**
+    *   Clique em "Salvar" para gravar suas chaves no `config.json`.
 
 4.  **Inicie o aplicativo em modo de desenvolvimento:**
     ```bash
@@ -93,3 +70,26 @@ Para criar um instalador executável (`.exe`) para o Windows, execute o seguinte
 
 ```bash
 npm run dist
+```
+
+O instalador será criado na pasta `dist` que aparecerá no seu projeto.
+
+---
+
+## 🛠️ Tecnologias Utilizadas
+
+*   **Framework:** [Electron](https://www.electronjs.org/)
+*   **Inteligência Artificial:**
+    *   [Google Gemini API](https://ai.google.dev/) (Roteiros)
+    *   [Google Cloud Text-to-Speech](https://cloud.google.com/text-to-speech) (Narração)
+    *   [Stability AI API](https://platform.stability.ai/) (Imagens)
+*   **Processamento de Mídia:** [FFmpeg](https://ffmpeg.org/)
+*   **Manipulação de Imagens:** [Sharp](https://sharp.pixelplumbing.com/)
+*   **Agendamento:** [node-cron](https://github.com/node-cron/node-cron)
+*   **Ambiente de Execução:** [Node.js](https://nodejs.org/)
+
+## 🛠️ Screenshots
+
+<img width="2550" height="1398" alt="image" src="https://github.com/user-attachments/assets/87d32ae0-7ab6-4836-837b-5203f615aeba" />
+<img width="1266" height="1173" alt="image" src="https://github.com/user-attachments/assets/18cbf72e-d8fa-4e6a-952c-c4dd49c7b59a" />
+<img width="1258" height="589" alt="image" src="https://github.com/user-attachments/assets/91bcc29f-f512-4ec7-a5e3-42f4175eafa1" />
