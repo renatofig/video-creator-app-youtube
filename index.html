@@ -2,24 +2,24 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Video Creator App</title>
+    <title data-i18n-key="appTitle">Video Creator App</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <header class="main-header">
-        <h1>Video Creator App</h1>
+        <h1 data-i18n-key="appTitleH1">Video Creator App</h1>
         <div class="main-actions">
             <button id="startButton">
-                <span class="btn-text">INICIAR AUTOMAÇÃO</span>
+                <span class="btn-text" data-i18n-key="startAutomationBtn">INICIAR AUTOMAÇÃO</span>
                 <span class="spinner" style="display: none;"></span>
             </button>
-            <button id="stopButton" disabled>PARAR AUTOMAÇÃO</button>
-            <button id="helpButton">Ajuda</button>
+            <button id="stopButton" disabled data-i18n-key="stopAutomationBtn">PARAR AUTOMAÇÃO</button>
+            <button id="helpButton" data-i18n-key="helpBtn">Ajuda</button>
         </div>
         <div class="header-buttons">
-            <button id="saveDefaultButton">Salvar</button>
-            <button id="saveAsButton">Salvar Como...</button>
-            <button id="openConfigButton">Abrir...</button>
+            <button id="saveDefaultButton" data-i18n-key="saveBtn">Salvar</button>
+            <button id="saveAsButton" data-i18n-key="saveAsBtn">Salvar Como...</button>
+            <button id="openConfigButton" data-i18n-key="openBtn">Abrir...</button>
         </div>
     </header>
 
@@ -27,160 +27,287 @@
         <div class="top-panels">
             <!-- PAINEL DE CONFIGURAÇÕES COM ABAS -->
             <section class="panel">
-                <h2>Configurações</h2>
+                <h2 data-i18n-key="settingsTitle">Configurações</h2>
                 <div class="tab-container">
-                    <button class="tab-link active" onclick="openTab(event, 'tab-midia')">Mídia</button>
+                    <button class="tab-link active" onclick="openTab(event, 'tab-midia')" data-i18n-key="mediaTab">Mídia</button>
                     <button class="tab-link" onclick="openTab(event, 'tab-youtube')">YouTube</button>
                     <button class="tab-link" onclick="openTab(event, 'tab-apis')">APIs</button>
                 </div>
 
-                <!-- Wrapper para o conteúdo das abas -->
                 <div class="tab-content-area">
                     <div id="tab-midia" class="tab-content">
-                        <h4 id="label-pastas-de-arquivos">Pastas de Arquivos</h4>
-                        <div class="path-selector"><label id="label-musicas">Pasta de Músicas:</label><input type="text" id="musicasPath" class="path-input" placeholder="Opcional: Deixe em branco para não usar música"><button id="musicasPath-button" class="select-button">Selecionar</button></div>
-                        <div class="path-selector"><label id="label-introducoes">Pasta de Introduções:</label><input type="text" id="introPath" class="path-input" placeholder="Opcional: Deixe em branco para não usar intro"><button id="introPath-button" class="select-button">Selecionar</button></div>
-                        <div class="path-selector"><label id="label-fundos">Pasta de Fundos:</label><input type="text" id="backgroundsPath" class="path-input" placeholder="Opcional: Deixe em branco para usar fundo preto"><button id="backgroundsPath-button" class="select-button">Selecionar</button></div>
-                        <div class="path-selector"><label>Pasta de Saída:</label><input type="text" id="outputDir" class="path-input" placeholder="Obrigatório: Onde salvar os vídeos"><button id="outputDir-button" class="select-button">Selecionar</button></div>
+                        <h4 class="tooltip-trigger" data-tooltip-key="mediaFoldersTooltip" data-i18n-key="mediaFoldersTitle">Pastas de Arquivos</h4>
+                        <div class="path-grid">
+                            <div class="path-selector"><label data-i18n-key="musicFolderLabel">Pasta de Músicas:</label><input type="text" id="musicasPath" class="path-input" data-i18n-key="musicFolderPlaceholder" placeholder="Opcional"><button id="musicasPath-button" class="select-button" data-i18n-key="selectBtn">Selecionar</button></div>
+                            <div class="path-selector"><label data-i18n-key="introsFolderLabel">Pasta de Introduções:</label><input type="text" id="introPath" class="path-input" data-i18n-key="introsFolderPlaceholder" placeholder="Opcional"><button id="introPath-button" class="select-button" data-i18n-key="selectBtn">Selecionar</button></div>
+                            <div class="path-selector"><label data-i18n-key="backgroundsFolderLabel">Pasta de Fundos:</label><input type="text" id="backgroundsPath" class="path-input" data-i18n-key="backgroundsFolderPlaceholder" placeholder="Opcional"><button id="backgroundsPath-button" class="select-button" data-i18n-key="selectBtn">Selecionar</button></div>
+                            <div class="path-selector"><label data-i18n-key="outputFolderLabel">Pasta de Saída:</label><input type="text" id="outputDir" class="path-input" data-i18n-key="outputFolderPlaceholder" placeholder="Obrigatório"><button id="outputDir-button" class="select-button" data-i18n-key="selectBtn">Selecionar</button></div>
+                        </div>
 
-                        <h4 style="margin-top: 20px;">Geração com IA</h4>
+                        <h4 data-i18n-key="customBrandingTitle">Branding com Logo</h4>
+                        <div class="path-selector full-width"><label data-i18n-key="vinhetaFileLabel">Vinheta Principal (Vídeo Opcional):</label><input type="text" id="vinhetaPath" class="path-input" data-i18n-key="vinhetaFilePlaceholder" placeholder="Opcional: Selecione um vídeo. Se vazio, um fundo será gerado."><button id="vinhetaPath-button" class="select-button" data-i18n-key="selectBtn">Selecionar</button></div>
+                        <div class="path-selector full-width"><label data-i18n-key="logoFileLabel">Logo para Sobrepor (PNG):</label><input type="text" id="logoPath" class="path-input" data-i18n-key="logoFilePlaceholder" placeholder="Opcional: Selecione um arquivo .png com transparência."><button id="logoPath-button" class="select-button" data-i18n-key="selectBtn">Selecionar</button></div>
+
+                        <div class="branding-grid">
+                            <div class="branding-column">
+                                <div class="checkbox-container"><input type="checkbox" id="addLogoIntroCheckbox"><label for="addLogoIntroCheckbox" data-i18n-key="addLogoIntroCheckbox">Adicionar Vinheta com Logo</label></div>
+                                <div class="branding-options">
+                                    <div class="control-item"><label for="introDuration" data-i18n-key="durationLabel">Duração (s):</label><input type="number" id="introDuration" value="5" min="2" max="15" class="short-input" disabled></div>
+                                    <div class="control-item"><label for="introAnimation" data-i18n-key="animationLabel">Animação:</label>
+                                        <select id="introAnimation" class="medium-input" disabled>
+                                            <option value="slide-in-left" data-i18n-key="animSlideInLeft">Deslizar da Esquerda</option>
+                                            <option value="slide-in-top" data-i18n-key="animSlideInTop">Deslizar de Cima</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="branding-column">
+                                <div class="checkbox-container"><input type="checkbox" id="addLogoOutroCheckbox"><label for="addLogoOutroCheckbox" data-i18n-key="addLogoOutroCheckbox">Adicionar Finalização com Logo</label></div>
+                                <div class="branding-options">
+                                    <div class="control-item"><label for="outroDuration" data-i18n-key="durationLabel">Duração (s):</label><input type="number" id="outroDuration" value="5" min="2" max="15" class="short-input" disabled></div>
+                                    <div class="control-item"><label for="outroAnimation" data-i18n-key="animationLabel">Animação:</label>
+                                        <select id="outroAnimation" class="medium-input" disabled>
+                                            <option value="slide-out-right" data-i18n-key="animSlideOutRight">Deslizar para Direita</option>
+                                            <option value="slide-out-bottom" data-i18n-key="animSlideOutBottom">Deslizar para Baixo</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <h4 data-i18n-key="aiGenerationTitle">Geração de Fundo com IA</h4>
                         <div class="option-selector">
-                            <label>Imagens da IA:</label>
+                            <label data-i18n-key="aiImagesLabel">Imagens da IA:</label>
                             <div class="options-container">
-                                 <input type="number" id="aiImageCount" value="1" min="1" max="20" class="short-input">
+                                 <input type="number" id="aiImageCount" value="3" min="1" max="20" class="short-input">
                             </div>
                         </div>
                         <div class="option-selector">
-                            <label>Opções de Fundo:</label>
+                            <label data-i18n-key="backgroundOptionsLabel">Opções de Fundo:</label>
                             <div class="options-container">
-                                <div class="checkbox-container"><input type="checkbox" id="randomizeBackgroundCheckbox"><label for="randomizeBackgroundCheckbox">Randomizar</label></div>
-                                <div class="checkbox-container"><input type="checkbox" id="prioritizeAiCheckbox"><label for="prioritizeAiCheckbox">Priorizar IA</label></div>
-                                <div class="checkbox-container"><input type="checkbox" id="useAiAsFallbackCheckbox"><label for="useAiAsFallbackCheckbox">Fallback IA</label></div>
+                                <div class="checkbox-container"><input type="checkbox" id="useLocalSlideshowCheckbox"><label for="useLocalSlideshowCheckbox" data-i18n-key="localSlideshowCheckbox">Montar slideshow com imagens existentes</label></div>
+                                <div class="checkbox-container"><input type="checkbox" id="prioritizeAiCheckbox"><label for="prioritizeAiCheckbox" data-i18n-key="prioritizeAiCheckbox">Priorizar IA</label></div>
+                                
+                                <div class="indented-controls-container" id="ai-animation-controls" style="display: none;">
+                                    <div class="checkbox-container">
+                                        <input type="checkbox" id="animateAiImagesCheckbox">
+                                        <label for="animateAiImagesCheckbox" class="tooltip-trigger" data-tooltip-key="animateAiImagesTooltip" data-i18n-key="animateAiImagesCheckbox">Animar imagens de IA (Custo Adicional)</label>
+                                    </div>
+                                    <div class="control-item">
+                                        <label for="motionIntensity" data-i18n-key="motionIntensityLabel">Intensidade do Movimento: <span id="motionIntensityValue">40</span></label>
+                                        
+                                        <input type="range" id="motionIntensity" min="1" max="180" value="40" class="slider-input" list="motion-markers" disabled>
+                                        <datalist id="motion-markers">
+                                            <option value="1"></option>
+                                            <option value="40"></option>
+                                            <option value="90"></option>
+                                            <option value="135"></option>
+                                            <option value="180"></option>
+                                        </datalist>
+                                        <div class="slider-labels">
+                                            <span>Sutil</span>
+                                            <span>Dramático</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="checkbox-container"><input type="checkbox" id="randomizeBackgroundCheckbox"><label for="randomizeBackgroundCheckbox" data-i18n-key="randomizeCheckbox">Randomizar</label></div>
                             </div>
                         </div>
                         
-                        <h4 style="margin-top: 20px;">Inicialização</h4>
+                        <h4 data-i18n-key="startupTitle">Inicialização</h4>
                         <div class="option-selector">
                             <div class="options-container">
-                                <div class="checkbox-container"><input type="checkbox" id="startupWinCheckbox"><label for="startupWinCheckbox">Iniciar com o Windows</label></div>
-                                <div class="checkbox-container"><input type="checkbox" id="startupAutoCheckbox"><label for="startupAutoCheckbox">Iniciar Automação ao abrir</label></div>
+                                <div class="checkbox-container"><input type="checkbox" id="startupWinCheckbox"><label for="startupWinCheckbox" data-i18n-key="startupWinCheckbox">Iniciar com o Windows</label></div>
+                                <div class="checkbox-container"><input type="checkbox" id="startupAutoCheckbox"><label for="startupAutoCheckbox" data-i18n-key="startupAutoCheckbox">Iniciar Automação ao abrir</label></div>
                             </div>
                         </div>
                     </div>
 
                     <div id="tab-youtube" class="tab-content">
-                        <h4>YouTube Login & Descrição (Padrão)</h4>
-                        <div class="button-group"><button id="youtubeLoginButton"><span class="btn-text">Login</span><span class="spinner" style="display: none;"></span></button><button id="youtubeLogoutButton">Deslogar</button></div>
-                        <small id="youtubeStatus">Não conectado.</small>
+                        <h4 data-i18n-key="youtubeLoginTitle">YouTube Login & Descrição (Padrão)</h4>
+                        <div class="button-group"><button id="youtubeLoginButton"><span class="btn-text" data-i18n-key="loginBtn">Login</span><span class="spinner" style="display: none;"></span></button><button id="youtubeLogoutButton" data-i18n-key="logoutBtn">Deslogar</button></div>
+                        <small id="youtubeStatus" data-i18n-key="youtubeStatusNotConnected">Não conectado.</small>
                         
                         <div class="checkbox-container" style="margin-top: 15px;">
                             <input type="checkbox" id="includeTitleOnThumbnailCheckbox" checked>
-                            <label for="includeTitleOnThumbnailCheckbox">Incluir título na thumbnail </label>
+                            <label for="includeTitleOnThumbnailCheckbox" data-i18n-key="includeTitleOnThumbnailCheckbox">Incluir título na thumbnail </label>
                         </div>
     
+                        <div class="checkbox-container" style="margin-top: 10px;">
+                            <input type="checkbox" id="ignoreDuplicatesCheckbox">
+                            <label for="ignoreDuplicatesCheckbox" class="tooltip-trigger" data-tooltip-key="ignoreDuplicatesTooltip" data-i18n-key="ignoreDuplicatesCheckbox">Ignorar duplicidade</label>
+                        </div>
+                        
                         <div class="description-container">
-                            <label for="youtubeDefaultDescription">Descrição Padrão (Opcional):</label>
-                            <textarea id="youtubeDefaultDescription" placeholder="Este texto será adicionado ao final da descrição gerada. Ex: Links de afiliado, redes sociais..."></textarea>
+                            <label for="youtubeDefaultDescription" data-i18n-key="youtubeDefaultDescLabel">Descrição Padrão (Opcional):</label>
+                            <textarea id="youtubeDefaultDescription" data-i18n-key="youtubeDefaultDescPlaceholder" placeholder="Este texto será adicionado ao final da descrição gerada. Ex: Links de afiliado, redes sociais..."></textarea>
                         </div>
                     </div>
     
                     <div id="tab-apis" class="tab-content">
-                        <h4>Chaves de API (Configuração Padrão)</h4>
+                        <h4 data-i18n-key="apiKeysTitle">Chaves de API (Configuração Padrão)</h4>
                         <div class="settings-grid">
-                            <div class="grid-item"><label>ID Pesquisa Futebol (Tema 1) (CX):</label><input type="text" id="searchEngineId"></div>
-                            <div class="grid-item"><label>ID Pesquisa Pescados (Tema 2) (CX):</label><input type="text" id="searchEngineIdPiscare"></div>
+                            <div class="grid-item"><label data-i18n-key="footballSearchIdLabel">ID Pesquisa Futebol (Tema 1) (CX):</label><input type="text" id="searchEngineId"></div>
+                            <div class="grid-item"><label data-i18n-key="fisheriesSearchIdLabel">ID Pesquisa Pescados (Tema 2) (CX):</label><input type="text" id="searchEngineIdFisheries"></div>
                             <div class="grid-item"><label>YouTube Client ID:</label><input type="text" id="youtubeClientId"></div>
                             <div class="grid-item"><label>YouTube Client Secret:</label><input type="password" id="youtubeClientSecret"></div>
                             <div class="grid-item"><label>Gemini AI:</label><input type="password" id="geminiApiKey"></div>
                             <div class="grid-item"><label>Google Cloud API Key:</label><input type="password" id="googleSearchApiKey"></div>
-                            <div class="grid-item"><label>Stability AI:</label><input type="password" id="stabilityApiKey" placeholder="Opcional"></div>
+                            <div class="grid-item"><label>Stability AI:</label><input type="password" id="stabilityApiKey" data-i18n-key="optionalPlaceholder" placeholder="Opcional"></div>
+                            <div class="grid-item full-width"><label data-i18n-key="gcsBucketNameLabel">Nome do Bucket Google Cloud Storage (para áudios > 1 min):</label><input type="text" id="gcsBucketName" data-i18n-key="gcsBucketNamePlaceholder" placeholder="Ex: meu-bucket-de-transcricao"></div>
+                        </div>
+
+                        <h4 data-i18n-key="authTitle">Autorização de Acesso</h4>
+                        <div class="settings-grid">
+                            <div class="grid-item full-width">
+                                <label data-i18n-key="userEmailLabel">Seu Email de Assinante:</label>
+                                <input type="text" id="userEmail" data-i18n-key="userEmailPlaceholder" placeholder="seu.email@exemplo.com">
+                            </div>
                         </div>
                     </div>
                 </div>
             </section>
             
-            <!-- PAINEL DE CONTROLE -->
             <section class="panel">
-                <h2>Controle</h2>
-                <div class="checkbox-container" style="margin-bottom: 15px;">
-                    <input type="checkbox" id="batchModeCheckbox">
-                    <label id="label-batch-mode" for="batchModeCheckbox">Carregar Parâmetros de Lote sequencial</label>
-                </div>
-
-                <div class="control-grid">
-                    <div class="control-grid-left">
-                        <label>Tipos de Conteúdo (sequencial):</label>
-                        <div class="theme-checkbox-group">
-                            <div><input type="checkbox" id="theme-historinhas" value="historinhas" class="theme-checkbox"><label for="theme-historinhas">Historinhas Infantis</label></div>
-                            <div><input type="checkbox" id="theme-futebol" value="futebol" class="theme-checkbox"><label for="theme-futebol">Notícias de Futebol (Tema 1)</label></div>
-                            <div><input type="checkbox" id="theme-pescados" value="pescados" class="theme-checkbox"><label for="theme-pescados">Notícias de Pescados (Tema 2)</label></div>
-                            <div><input type="checkbox" id="theme-ciencia" value="ciencia" class="theme-checkbox"><label for="theme-ciencia">Curiosidades Científicas</label></div>
-                            <div><input type="checkbox" id="theme-freeform" value="freeform" class="theme-checkbox"><label for="theme-freeform">Prompt Livre</label></div>
-                        </div>
-                        <div id="freeform-prompt-container" style="display: none; margin-top: 10px;">
-                            <label for="freeform-prompt-input">Tema Principal:</label>
-                            <textarea id="freeform-prompt-input" rows="2" placeholder="Ex: A história da invenção do avião"></textarea>
-                            <div class="freeform-controls-grid">
-                                <div class="grid-item">
-                                    <label for="freeform-style">Estilo do Roteiro:</label>
-                                    <select id="freeform-style">
-                                        <option value="Noticiário / Informativo">Noticiário / Informativo</option>
-                                        <option value="Documentário / Narrativo" selected>Documentário / Narrativo</option>
-                                        <option value="Lista (Top 5, etc.)">Lista (Top 5, etc.)</option>
-                                        <option value="Conto / História">Conto / História</option>
-                                    </select>
-                                </div>
-                                <div class="grid-item">
-                                    <label for="freeform-tone">Tom do Vídeo:</label>
-                                    <select id="freeform-tone">
-                                        <option value="Sério / Jornalístico">Sério / Jornalístico</option>
-                                        <option value="Inspirador / Otimista">Inspirador / Otimista</option>
-                                        <option value="Curioso / Educacional" selected>Curioso / Educacional</option>
-                                        <option value="Casual / Conversado">Casual / Conversado</option>
-                                        <option value="Sombrio / Misterioso">Sombrio / Misterioso</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <label for="freeform-audience" style="margin-top: 10px;">Público-Alvo:</label>
-                            <input type="text" id="freeform-audience" placeholder="Ex: Iniciantes em tecnologia, fãs de história">
-                        </div>
+                <h2 data-i18n-key="controlTitle">Controle</h2>
+                <div class="control-panel-content">
+                    <div class="checkbox-container" style="margin-bottom: 15px;">
+                        <input type="checkbox" id="batchModeCheckbox">
+                        <label for="batchModeCheckbox" class="tooltip-trigger" data-tooltip-key="batchModeTooltip" data-i18n-key="batchModeCheckbox">Carregar Parâmetros de Lote sequencial</label>
                     </div>
-                    <div class="control-grid-right">
-                        <div class="schedule-presets" style="margin-bottom: 5px; display: flex; gap: 5px; justify-content: flex-start;">
-                            <button class="preset-btn" id="selectAllHours">Todos</button>
-                            <button class="preset-btn" id="selectNoneHours">Nenhum</button>
-                            <button class="preset-btn" id="selectWorkHours">Comercial</button>
-                            <button class="preset-btn" id="selectNightHours">Madrugada</button>
-                        </div>
-                        <label>Horários (selecione um ou mais):</label>
-                        <div id="schedule-hours-grid" class="hours-grid"></div>
 
-                        <div class="inline-controls-group">
-                            <div class="control-item">
-                                <label for="audioDuration">Duração (minutos):</label>
-                                <input type="number" id="audioDuration" value="5" min="1" max="10" class="short-input">
-                            </div>
-                            <div class="control-item">
-                                <label for="scheduleFrequency">Frequência:</label>
-                                <select id="scheduleFrequency" class="short-input"><option value="daily">Diária</option><option value="weekly">Semanal</option><option value="monthly">Mensal</option></select>
+                    <div class="control-grid">
+                        <div class="control-grid-left">
+                            <label data-i18n-key="contentTypesLabel">Tipos de Conteúdo (sequencial):</label>
+                            <div class="theme-options-wrapper">
+                                <div class="theme-checkbox-group">
+                                    <div>
+                                        <input type="checkbox" id="theme-historinhas" value="stories" class="theme-checkbox">
+                                        <label for="theme-historinhas" data-i18n-key="themeStories">Historinhas Infantis</label>
+                                        <select id="playlist-stories" class="playlist-selector" style="display: none;"></select>
+                                    </div>
+                                    <div>
+                                        <input type="checkbox" id="theme-futebol" value="football" class="theme-checkbox">
+                                        <label for="theme-futebol" data-i18n-key="themeFootball">Notícias de Futebol (Tema 1)</label>
+                                        <select id="playlist-football" class="playlist-selector" style="display: none;"></select>
+                                    </div>
+                                    <div>
+                                        <input type="checkbox" id="theme-pescados" value="fisheries" class="theme-checkbox">
+                                        <label for="theme-pescados" data-i18n-key="themeFisheries">Notícias de Pescados (Tema 2)</label>
+                                        <select id="playlist-fisheries" class="playlist-selector" style="display: none;"></select>
+                                    </div>
+                                    <div>
+                                        <input type="checkbox" id="theme-ciencia" value="science" class="theme-checkbox">
+                                        <label for="theme-ciencia" data-i18n-key="themeScience">Curiosidades Científicas</label>
+                                        <select id="playlist-science" class="playlist-selector" style="display: none;"></select>
+                                    </div>
+                                    <div>
+                                        <input type="checkbox" id="theme-freeform" value="freeform" class="theme-checkbox">
+                                        <label for="theme-freeform" data-i18n-key="themeFreeform">Prompt Livre</label>
+                                        <select id="playlist-freeform" class="playlist-selector" style="display: none;"></select>
+                                    </div>
+                                    <div>
+                                        <input type="checkbox" id="theme-fixedtext" value="fixedtext" class="theme-checkbox">
+                                        <label for="theme-fixedtext" data-i18n-key="themeFixedtext">Texto Fixo (upload)</label>
+                                        <select id="playlist-fixedtext" class="playlist-selector" style="display: none;"></select>
+                                    </div>
+                                </div>
+                                
+                                <div id="freeform-prompt-container" class="theme-options-panel">
+                                    <label for="freeform-prompt-input" data-i18n-key="freeformMainTheme">Tema Principal:</label>
+                                    <textarea id="freeform-prompt-input" rows="2" data-i18n-key="freeformMainThemePlaceholder" placeholder="Ex: A história da invenção do avião"></textarea>
+                                    <div class="freeform-controls-grid">
+                                        <div class="grid-item">
+                                            <label for="freeform-style" data-i18n-key="freeformScriptStyle">Estilo do Roteiro:</label>
+                                            <select id="freeform-style">
+                                                <option value="Noticiário / Informativo" data-i18n-key="styleOptionNews">Noticiário / Informativo</option>
+                                                <option value="Documentário / Narrativo" selected data-i18n-key="styleOptionDoc">Documentário / Narrativo</option>
+                                                <option value="Lista (Top 5, etc.)" data-i18n-key="styleOptionList">Lista (Top 5, etc.)</option>
+                                                <option value="Conto / História" data-i18n-key="styleOptionStory">Conto / História</option>
+                                            </select>
+                                        </div>
+                                        <div class="grid-item">
+                                            <label for="freeform-tone" data-i18n-key="freeformVideoTone">Tom do Vídeo:</label>
+                                            <select id="freeform-tone">
+                                                <option value="Sério / Jornalístico" data-i18n-key="toneOptionSerious">Sério / Jornalístico</option>
+                                                <option value="Inspirador / Otimista" data-i18n-key="toneOptionInspiring">Inspirador / Otimista</option>
+                                                <option value="Curioso / Educacional" selected data-i18n-key="toneOptionCurious">Curioso / Educacional</option>
+                                                <option value="Casual / Conversado" data-i18n-key="toneOptionCasual">Casual / Conversado</option>
+                                                <option value="Sombrio / Misterioso" data-i18n-key="toneOptionDark">Sombrio / Misterioso</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <label for="freeform-audience" style="margin-top: 10px;" data-i18n-key="freeformTargetAudience">Público-Alvo:</label>
+                                    <input type="text" id="freeform-audience" data-i18n-key="freeformTargetAudiencePlaceholder" placeholder="Ex: Iniciantes em tecnologia, fãs de história">
+                                </div>
+                                
+                                <div id="fixedtext-container" class="theme-options-panel">
+                                    <label data-i18n-key="fixedtextSourceLabel">Fonte (.txt, .pdf, .mp3, m4a, mp4), Pasta ou Link do YouTube.</label>
+                                    <input type="text" id="fixedtext-source-input" class="path-input" data-i18n-key="fixedtextSourcePlaceholder" placeholder="Cole um link do YouTube aqui OU use os botões abaixo">
+                                    <div class="button-group" style="margin-top: 5px;">
+                                         <button id="fixedtext-select-file-button" class="select-button" data-i18n-key="selectFileBtn">Arquivo...</button>
+                                         <button id="fixedtext-select-folder-button" class="select-button" data-i18n-key="selectFolderBtn">Pasta...</button>
+                                    </div>
+                                    <div class="fixed-text-options-container">
+                                        <div class="checkbox-container">
+                                            <input type="checkbox" id="fixedtext-original-checkbox">
+                                            <label for="fixedtext-original-checkbox" class="tooltip-trigger" data-i18n-key="fixedtextOriginalCheckbox" data-tooltip-key="fixedtextOriginalTooltip">Usar conteúdo original</label>
+                                        </div>
+                                        <div class="checkbox-container indented">
+                                            <input type="checkbox" id="fixedtext-literal-checkbox" disabled>
+                                            <label for="fixedtext-literal-checkbox" data-i18n-key="fixedtextLiteralCheckbox">Texto Literal (sem IA no roteiro)</label>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
-                        <div id="weekly-options" class="schedule-options" style="display: none;"><label for="scheduleDayOfWeek">Dia da Semana:</label><select id="scheduleDayOfWeek"><option value="0">Domingo</option><option value="1">Segunda</option><option value="2">Terça</option><option value="3">Quarta</option><option value="4">Quinta</option><option value="5">Sexta</option><option value="6">Sábado</option></select></div>
-                        <div id="monthly-options" class="schedule-options" style="display: none;"><label for="scheduleDayOfMonth">Dia do Mês:</label><input type="number" id="scheduleDayOfMonth" value="1" min="1" max="31"></div>
-                        
-                        <div style="margin-top: 20px;">
-                            <div class="checkbox-container"><input type="checkbox" id="uploadToYouTubeCheckbox" checked><label for="uploadToYouTubeCheckbox">Enviar para o YouTube após criar</label></div>
-                            <div class="checkbox-container"><input type="checkbox" id="deleteAfterUploadCheckbox" disabled><label for="deleteAfterUploadCheckbox">Apagar pasta local após upload</label></div>
-                        </div>
-                        <div class="counters-wrapper">
-                            <div class="counter-container">
-                                <span class="counter-label">Vídeos Gerados Nesta Sessão</span>
-                                <span id="videoCounter" class="counter-display">0</span>
+                        <div class="control-grid-right">
+                            <div class="main-controls-block">
+                                <div class="schedule-presets" style="margin-bottom: 5px; display: flex; gap: 5px; justify-content: flex-start;">
+                                    <button class="preset-btn" id="selectAllHours" data-i18n-key="presetAll">Todos</button>
+                                    <button class="preset-btn" id="selectNoneHours" data-i18n-key="presetNone">Nenhum</button>
+                                    <button class="preset-btn" id="selectWorkHours" data-i18n-key="presetWork">Comercial</button>
+                                    <button class="preset-btn" id="selectNightHours" data-i18n-key="presetNight">Madrugada</button>
+                                </div>
+                                <label data-i18n-key="scheduleLabel">Horários (selecione um ou mais):</label>
+                                <div id="schedule-hours-grid" class="hours-grid"></div>
+
+                                <div class="inline-controls-group">
+                                    <div class="control-item">
+                                        <label for="audioDuration" data-i18n-key="durationLabelMain">Duração (minutos):</label>
+                                        <input type="number" id="audioDuration" value="5" min="1" max="20" class="short-input">
+                                    </div>
+                                    <div class="control-item">
+                                        <label for="scheduleFrequency" data-i18n-key="frequencyLabel">Frequência:</label>
+                                        <select id="scheduleFrequency" class="short-input"><option value="daily" data-i18n-key="freqDaily">Diária</option><option value="weekly" data-i18n-key="freqWeekly">Semanal</option><option value="monthly" data-i18n-key="freqMonthly">Mensal</option></select>
+                                    </div>
+                                </div>
+                                
+                                <div id="weekly-options" class="schedule-options" style="display: none;"><label for="scheduleDayOfWeek" data-i18n-key="dayOfWeekLabel">Dia da Semana:</label><select id="scheduleDayOfWeek"><option value="0" data-i18n-key="daySun">Domingo</option><option value="1" data-i18n-key="dayMon">Segunda</option><option value="2" data-i18n-key="dayTue">Terça</option><option value="3" data-i18n-key="dayWed">Quarta</option><option value="4" data-i18n-key="dayThu">Quinta</option><option value="5" data-i18n-key="dayFri">Sexta</option><option value="6" data-i18n-key="daySat">Sábado</option></select></div>
+                                <div id="monthly-options" class="schedule-options" style="display: none;"><label for="scheduleDayOfMonth" data-i18n-key="dayOfMonthLabel">Dia do Mês:</label><input type="number" id="scheduleDayOfMonth" value="1" min="1" max="31"></div>
+                            
+                                <div class="language-and-upload-block">
+                                    <label data-i18n-key="videoLanguageLabel">Idioma do Vídeo:</label>
+                                    <div id="language-toggle" class="language-toggle-container">
+                                        <button id="lang-pt-br" class="lang-btn active">PT-BR</button>
+                                        <button id="lang-en-us" class="lang-btn">EN-US</button>
+                                    </div>
+                                    <div class="checkbox-container"><input type="checkbox" id="uploadToYouTubeCheckbox" checked><label for="uploadToYouTubeCheckbox" data-i18n-key="uploadToYouTubeCheckbox">Enviar para o YouTube após criar</label></div>
+                                    <div class="checkbox-container"><input type="checkbox" id="deleteAfterUploadCheckbox" disabled><label for="deleteAfterUploadCheckbox" data-i18n-key="deleteAfterUploadCheckbox">Apagar pasta local após upload</label></div>
+                                </div>
                             </div>
-                            <div class="counter-container">
-                                <span class="counter-label">Vídeos Não Gerados por Erros</span>
-                                <span id="errorCounter" class="counter-display error">0</span>
+                            
+                            <div class="counters-wrapper">
+                                <div class="counter-container">
+                                    <span class="counter-label" data-i18n-key="videosGeneratedLabel">Vídeos Gerados Nesta Sessão</span>
+                                    <span id="videoCounter" class="counter-display">0</span>
+                                </div>
+                                <div class="counter-container">
+                                    <span class="counter-label" data-i18n-key="errorsLabel">Vídeos Não Gerados por Erros</span>
+                                    <span id="errorCounter" class="counter-display error">0</span>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -188,41 +315,49 @@
             </section>
         </div>
         <div class="splitter" id="splitter"></div>
-        <div class="log-panel"><h2>Log de Atividades</h2><pre id="log" class="log-area"></pre></div>
+        <div class="log-panel"><h2 data-i18n-key="logTitle">Log de Atividades</h2><pre id="log" class="log-area"></pre></div>
     </div>
 
     <!-- JANELA MODAL DE AJUDA -->
-    <div id="helpModal" class="modal"><div class="modal-content"><span class="close-button" id="closeHelpModal">&times;</span><h1>Como Obter as Chaves de API</h1><section class="help-section"><h2>1. Chave da API do Gemini</h2><p>Para evitar os limites do plano gratuito (ex: 50 requisições/dia), é altamente recomendado habilitar o faturamento no seu projeto do Google Cloud.</p><ol><li>Acesse o <a href="https://console.cloud.google.com/billing" target="_blank">Google Cloud Billing</a> e configure uma conta de faturamento.</li><li>Vincule seu projeto a esta conta de faturamento.</li><li>Acesse o <a href="https://aistudio.google.com/app/apikey" target="_blank">Google AI Studio</a>.</li><li>Clique em <strong>"Create API key"</strong> no projeto correto.</li><li>Copie a chave gerada e cole no campo "Gemini AI:".</li></ol></section><section class="help-section"><h2>2. Chave de API do Google Cloud e IDs de Pesquisa</h2><p><strong>IMPORTANTE:</strong> Para separar as notícias, você precisará criar <strong>dois Mecanismos de Pesquisa Programáveis</strong>, um para cada tema.</p><h3>Parte A: Chave da API (para Voz e Pesquisa)</h3><ol><li>Acesse o <a href="https://console.cloud.google.com/" target="_blank">Google Cloud Console</a> e selecione seu projeto.</li><li>No menu de navegação, vá para <strong>APIs e Serviços > Biblioteca</strong>. Procure e <strong>ATIVE</strong> as seguintes duas APIs: <code>Custom Search API</code> e <code>Cloud Text-to-Speech API</code>.</li><li>Depois de ativadas, vá para <strong>APIs e Serviços > Credenciais</strong> e clique em <strong>+ CRIAR CREDENCIAIS > Chave de API</strong>.</li><li>Copie a chave gerada e cole no campo "Google Cloud API Key:". Esta chave única servirá para a geração de voz e para os mecanismos de pesquisa.</li></ol><h3>Parte B: IDs dos Mecanismos de Pesquisa (CX)</h3><ol><li>Acesse o <a href="https://programmablesearchengine.google.com/" target="_blank">Mecanismo de Pesquisa Programável</a>.</li><li><strong>Para Futebol (Tema 1):</strong> Crie um mecanismo e em "Sites para pesquisar", adicione sites de esporte (Ex: <code>ge.globo.com/futebol/*</code>, <code>www.uol.com.br/esporte/futebol/*</code>). Copie o ID gerado para o campo "ID Pesquisa Futebol (Tema 1) (CX)".</li><li><strong>Para Pescados (Tema 2):</strong> Crie um <strong>segundo</strong> mecanismo e em "Sites para pesquisar", adicione sites de agronegócio, economia e alimentos (Ex: <code>g1.globo.com/economia/agronegocios/*</code>, <code>www.seafoodbrasil.com.br/*</code>, <code>www.canalrural.com.br/*</code>). Copie o novo ID gerado para o campo "ID Pesquisa Pescados (Tema 2) (CX)".</li></ol></section><section class="help-section"><h2>3. Credenciais do YouTube (Client ID e Secret)</h2><p><strong>Atenção:</strong> a funcionalidade de verificação de duplicidade de vídeos requer a permissão de "leitura" do seu canal. Ao fazer login pela primeira vez com esta versão, você precisará re-autorizar o acesso na tela do Google.</p><ol><li>No mesmo projeto do Google Cloud, vá para <strong>APIs e Serviços > Biblioteca</strong>, procure por <code>YouTube Data API v3</code> e clique em <strong>ATIVAR</strong>.</li><li>Vá para <strong>APIs e Serviços > Tela de permissão OAuth</strong>. Selecione <strong>Externo</strong>, preencha os dados e na etapa "Usuários de teste", clique em <strong>+ ADD USERS</strong> e adicione o seu próprio e-mail do Google.</li><li>Agora vá para <strong>APIs e Serviços > Credenciais</strong>. Clique em <strong>+ CRIAR CREDENCIAIS > ID do cliente OAuth</strong>.</li><li>Em "Tipo de aplicativo", selecione <strong>App para computador</strong>.</li><li>Após criar, copie o <strong>Client ID</strong> e <strong>Client Secret</strong> para os campos do aplicativo.</li></ol></section><section class="help-section" id="help-organizing-media"><h2>4. Organizando Seus Arquivos de Mídia</h2>
-                <p><strong>Pastas Padrão:</strong> Para facilitar, ao iniciar, o aplicativo cria automaticamente as pastas <code>musicas</code>, <code>introducoes</code> e <code>fundos</code> na sua pasta de dados do usuário (a mesma onde o arquivo <code>config.json</code> é salvo). Os caminhos para estas pastas serão preenchidos automaticamente se estiverem vazios. Você pode colocar seus arquivos de mídia diretamente nessas pastas para um início rápido.</p>
-                <p><strong>Nomeando Arquivos por Tema:</strong> Para que o aplicativo selecione introduções e fundos que combinem com o tema do vídeo, você pode nomear seus arquivos usando os seguintes prefixos (em letras minúsculas):</p>
-                <ul>
-                    <li><strong>Futebol:</strong> Nomeie os arquivos começando com <code>futebol</code>.</li>
-                    <li><strong>Pescados:</strong> Nomeie os arquivos começando com <code>pescado</code>.</li>
-                    <li><strong>Ciências:</strong> Nomeie os arquivos começando com <code>ciencia</code>.</li>
-                    <li><strong>Prompt Livre:</strong> Nomeie os arquivos começando com <code>generico</code>.</li>
-                    <li><strong>Historinhas Infantis:</strong> Nomeie os arquivos começando com <code>historinha</code>.</li>
-                </ul>
-                <p>Coloque esses arquivos nas suas respectivas "Pasta de Fundos" e "Pasta de Introduções". Se nenhum arquivo com o prefixo correto for encontrado, o aplicativo escolherá um arquivo aleatório da pasta como alternativa para fundos e não usará nenhuma introdução.</p>
+    <div id="helpModal" class="modal"><div class="modal-content"><span class="close-button" id="closeHelpModal">&times;</span><h1 data-i18n-key="helpTitle">Como Obter as Chaves de API</h1><section class="help-section"><h2 data-i18n-key="helpGeminiTitle">1. Chave da API do Gemini</h2><p data-i18n-key="helpGeminiDesc">Para evitar os limites do plano gratuito (ex: 50 requisições/dia), é altamente recomendado habilitar o faturamento no seu projeto do Google Cloud.</p><ol><li data-i18n-key="helpGeminiStep1">Acesse o <a href="https://console.cloud.google.com/billing" target="_blank">Google Cloud Billing</a> e configure uma conta de faturamento.</li><li data-i18n-key="helpGeminiStep2">Vincule seu projeto a esta conta de faturamento.</li><li data-i18n-key="helpGeminiStep3">Acesse o <a href="https://aistudio.google.com/app/apikey" target="_blank">Google AI Studio</a>.</li><li data-i18n-key="helpGeminiStep4">Clique em <strong>"Create API key"</strong> no projeto correto.</li><li data-i18n-key="helpGeminiStep5">Copie a chave gerada e cole no campo "Gemini AI:".</li></ol></section><section class="help-section"><h2 data-i18n-key="helpGoogleApiTitle">2. Chave de API do Google Cloud e IDs de Pesquisa</h2><p data-i18n-key="helpGoogleApiDesc"><strong>IMPORTANTE:</strong> Para separar as notícias, você precisará criar <strong>dois Mecanismos de Pesquisa Programáveis</strong>, um para cada tema.</p><h3 data-i18n-key="helpGoogleApiPartA">Parte A: Chave da API (para Voz e Pesquisa)</h3><ol><li data-i18n-key="helpGoogleApiStepA1">Acesse o <a href="https://console.cloud.google.com/" target="_blank">Google Cloud Console</a> e selecione seu projeto.</li><li data-i18n-key="helpGoogleApiStepA2">No menu de navegação, vá para <strong>APIs e Serviços > Biblioteca</strong>. Procure e <strong>ATIVE</strong> as seguintes duas APIs: <code>Custom Search API</code> e <code>Cloud Text-to-Speech API</code>.</li><li data-i18n-key="helpGoogleApiStepA3">Depois de ativadas, vá para <strong>APIs e Serviços > Credenciais</strong> e clique em <strong>+ CRIAR CREDENCIAIS > Chave de API</strong>.</li><li data-i18n-key="helpGoogleApiStepA4">Copie a chave gerada e cole no campo "Google Cloud API Key:". Esta chave única servirá para a geração de voz e para os mecanismos de pesquisa.</li></ol><h3 data-i18n-key="helpGoogleApiPartB">Parte B: IDs dos Mecanismos de Pesquisa (CX)</h3><ol><li data-i18n-key="helpGoogleApiStepB1">Acesse o <a href="https://programmablesearchengine.google.com/" target="_blank">Mecanismo de Pesquisa Programável</a>.</li><li data-i18n-key="helpGoogleApiStepB2"><strong>Para Futebol (Tema 1):</strong> Crie um mecanismo e em "Sites para pesquisar", adicione sites de esporte (Ex: <code>ge.globo.com/futebol/*</code>, <code>espn.com/soccer/*</code>). Copie o ID gerado para o campo "ID Pesquisa Futebol (Tema 1) (CX)".</li><li data-i18n-key="helpGoogleApiStepB3"><strong>Para Pescados (Tema 2):</strong> Crie um <strong>segundo</strong> mecanismo e em "Sites para pesquisar", adicione sites de agronegócio, economia e alimentos (Ex: <code>g1.globo.com/economia/agronegocios/*</code>, <code>seafoodsource.com/*</code>). Copie o novo ID gerado para o campo "ID Pesquisa Pescados (Tema 2) (CX)".</li></ol>
+            <h3 data-i18n-key="helpGoogleApiPartC">Parte C: Bucket do Google Cloud Storage (Obrigatório para áudios longos)</h3>
+            <p data-i18n-key="helpGcsDesc">Para transcrever áudios ou vídeos com mais de 60 segundos, a API de Voz do Google exige que o arquivo seja enviado para um "bucket" de armazenamento. Este é um passo único.</p>
+            <ol>
+                <li data-i18n-key="helpGcsStep1">No <a href="https://console.cloud.google.com/" target="_blank">Google Cloud Console</a>, procure por <strong>Cloud Storage</strong> e clique em <strong>Buckets</strong>.</li>
+                <li data-i18n-key="helpGcsStep2">Clique em <strong>+ CRIAR</strong>. Dê um <strong>nome único global</strong> ao seu bucket (ex: <code>audios-transcricao-meuprojeto123</code>). Anote este nome.</li>
+                <li data-i18n-key="helpGcsStep3">Escolha a localização mais próxima de você (ex: <code>southamerica-east1</code> para São Paulo).</li>
+                <li data-i18n-key="helpGcsStep4">Mantenha as outras opções como padrão (Standard, Uniform) e clique em <strong>CRIAR</strong>.</li>
+                <li data-i18n-key="helpGcsStep5">Copie o nome exato que você deu ao bucket e cole no campo "Nome do Bucket Google Cloud Storage:" no aplicativo.</li>
+            </ol>
+            </section><section class="help-section"><h2 data-i18n-key="helpYoutubeTitle">3. Credenciais do YouTube (Client ID e Secret)</h2><p data-i18n-key="helpYoutubeDesc"><strong>Atenção:</strong> a funcionalidade de verificação de duplicidade de vídeos requer a permissão de "leitura" do seu canal. Ao fazer login pela primeira vez com esta versão, você precisará re-autorizar o acesso na tela do Google.</p><ol><li data-i18n-key="helpYoutubeStep1">No mesmo projeto do Google Cloud, vá para <strong>APIs e Serviços > Biblioteca</strong>, procure por <code>YouTube Data API v3</code> e clique em <strong>ATIVAR</strong>.</li><li data-i18n-key="helpYoutubeStep2">Vá para <strong>APIs e Serviços > Tela de permissão OAuth</strong>. Selecione <strong>Externo</strong>, preencha os dados e na etapa "Usuários de teste", clique em <strong>+ ADD USERS</strong> e adicione o seu próprio e-mail do Google.</li><li data-i18n-key="helpYoutubeStep3">Agora vá para <strong>APIs e Serviços > Credenciais</strong>. Clique em <strong>+ CRIAR CREDENCIAIS > ID do cliente OAuth</strong>.</li><li data-i18n-key="helpYoutubeStep4">Em "Tipo de aplicativo", selecione <strong>App para computador</strong>.</li><li data-i18n-key="helpYoutubeStep5">Após criar, copie o <strong>Client ID</strong> e <strong>Client Secret</strong> para os campos do aplicativo.</li></ol></section>
+            
+            <section class="help-section" id="help-organizing-media">
+                <h2 data-i18n-key="helpMediaTitle">4. Organizando Seus Arquivos de Mídia</h2>
+                <div data-i18n-key="helpMediaDesc1"></div>
+                <div data-i18n-key="helpMediaDesc2"></div>
+                <div data-i18n-key="helpMediaList"></div>
+                <div data-i18n-key="helpMediaHowItWorks"></div>
             </section>
+
             <section class="help-section">
-                <h2>5. Chave da API da Stability AI (Opcional)</h2>
-                <p>Esta chave é necessária para gerar imagens e vídeos de fundo com Inteligência Artificial. Se deixada em branco, essa funcionalidade será desativada.</p>
+                <h2 data-i18n-key="helpStabilityTitle">5. Chave da API da Stability AI (Opcional)</h2>
+                <p data-i18n-key="helpStabilityDesc">Esta chave é necessária para gerar imagens e vídeos de fundo com Inteligência Artificial. Se deixada em branco, essa funcionalidade será desativada.</p>
                 <ol>
-                    <li>Acesse a plataforma da Stability AI em <a href="https://platform.stability.ai/" target="_blank">platform.stability.ai</a>.</li>
-                    <li>Faça login ou crie uma nova conta.</li>
-                    <li>No menu da sua conta (geralmente no canto superior direito), clique em <strong>"API Keys"</strong>.</li>
-                    <li>Copie a sua chave de API. Ela se parecerá com <code>sk-...</code></li>
-                    <li>Cole a chave no campo "Stability AI:" no aplicativo.</li>
+                    <li data-i18n-key="helpStabilityStep1">Acesse a plataforma da Stability AI em <a href="https://platform.stability.ai/" target="_blank">platform.stability.ai</a>.</li>
+                    <li data-i18n-key="helpStabilityStep2">Faça login ou crie uma nova conta.</li>
+                    <li data-i18n-key="helpStabilityStep3">No menu da sua conta (geralmente no canto superior direito), clique em <strong>"API Keys"</strong>.</li>
+                    <li data-i18n-key="helpStabilityStep4">Copie a sua chave de API. Ela se parecerá com <code>sk-...</code></li>
+                    <li data-i18n-key="helpStabilityStep5">Cole a chave no campo "Stability AI:" no aplicativo.</li>
                 </ol>
             </section>
             <section class="help-section" id="help-batch-mode">
-                <h2>6. Modo Lote: Publicando em Canais Diferentes</h2>
-                <p>Esta funcionalidade permite que cada tipo de conteúdo use uma configuração específica (incluindo canal do YouTube, pasta de saída, descrição padrão, etc.) dentro de uma única execução em lote.</p>
+                <h2 data-i18n-key="helpBatchTitle">6. Modo Lote: Publicando em Canais Diferentes</h2>
+                <div data-i18n-key="helpBatchDesc1"></div>
                 <ol>
-                    <li>Marque a caixa de seleção "Carregar Parâmetros de Lote sequencial" no Painel de Controle.</li>
-                    <li>Na pasta de dados do aplicativo (a mesma onde o <code>config.json</code> principal é salvo), crie arquivos <code>.json</code> para cada tema que você deseja personalizar.</li>
-                    <li>Os nomes dos arquivos devem ser exatos: <code>futebol.json</code>, <code>pescados.json</code>, <code>ciencia.json</code>, <code>historinhas.json</code>, <code>freeform.json</code>.</li>
-                    <li>Dentro de cada arquivo, adicione apenas os campos que você deseja sobrescrever. <strong>Exemplo de um arquivo `pescados.json`:</strong></li>
+                    <li data-i18n-key="helpBatchStep1">Marque a caixa de seleção "Carregar Parâmetros de Lote sequencial" no Painel de Controle.</li>
+                    <li data-i18n-key="helpBatchStep2">Na pasta de dados do aplicativo (a mesma onde o <code>config.json</code> principal é salvo), crie arquivos <code>.json</code> para cada tema que você deseja personalizar.</li>
+                    <li data-i18n-key="helpBatchStep3">Os nomes dos arquivos devem ser exatos: <code>football.json</code>, <code>fisheries.json</code>, <code>science.json</code>, <code>stories.json</code>, <code>freeform.json</code>, <code>fixedtext.json</code>.</li>
+                    <li data-i18n-key="helpBatchStep4">Dentro de cada arquivo, adicione apenas os campos que você deseja sobrescrever. <strong>Exemplo de um arquivo `fisheries.json`:</strong></li>
                 </ol>
                 <pre><code>{
   "youtubeClientId": "ID_DO_SEU_CANAL_DE_PESCADOS",
@@ -233,6 +368,29 @@
   "outputDir": "C:\\Caminho\\Para\\Videos\\Pescados"
 }</code></pre>
             </section>
+            
+            <section class="help-section" id="help-branding">
+                <h2 data-i18n-key="helpBrandingTitle">7. Como funcionam as Vinhetas e Finalizações</h2>
+                <p data-i18n-key="helpBrandingDesc">A seção "Branding com Logo" permite criar introduções e finalizações de forma flexível. A ordem de montagem do vídeo final é:</p>
+                <ol>
+                    <li data-i18n-key="helpBrandingOrder1"><strong>1. Introdução da Pasta:</strong> Um vídeo temático da sua "Pasta de Introduções".</li>
+                    <li data-i18n-key="helpBrandingOrder2"><strong>2. Vinheta com Logo:</strong> A vinheta criada na seção "Branding", que vem logo após a introdução da pasta.</li>
+                    <li data-i18n-key="helpBrandingOrder3"><strong>3. Corpo do Vídeo:</strong> O conteúdo principal gerado.</li>
+                    <li data-i18n-key="helpBrandingOrder4"><strong>4. Finalização com Logo:</strong> Um clipe final com sua marca.</li>
+                </ol>
+
+                <h3 data-i18n-key="helpBrandingIntroTitle">Configurando a "Vinheta com Logo"</h3>
+                <p data-i18n-key="helpBrandingIntroDesc">Você tem três opções principais ao marcar "Adicionar Vinheta com Logo":</p>
+                <ul>
+                    <li data-i18n-key="helpBrandingIntroOpt1"><strong>Vídeo + Logo (Recomendado):</strong> Selecione um vídeo em "Vinheta Principal" e um PNG em "Logo para Sobrepor". O aplicativo irá animar seu logo por cima do seu vídeo. O áudio original do vídeo será mantido.</li>
+                    <li data-i18n-key="helpBrandingIntroOpt2"><strong>Apenas Vinheta (Vídeo):</strong> Selecione um vídeo em "Vinheta Principal" e deixe o campo "Logo para Sobrepor" em branco. O aplicativo usará seu vídeo como uma vinheta simples, sem animação de logo.</li>
+                    <li data-i18n-key="helpBrandingIntroOpt3"><strong>Apenas Logo (Imagem):</strong> Deixe "Vinheta Principal" em branco e selecione um PNG em "Logo para Sobrepor". O aplicativo criará um fundo animado (baseado no conteúdo do vídeo) e aplicará seu logo sobre ele.</li>
+                </ul>
+
+                <h3 data-i18n-key="helpBrandingOutroTitle">Configurando a "Finalização com Logo"</h3>
+                <p data-i18n-key="helpBrandingOutroDesc">Esta opção funciona de forma mais simples. Ela sempre precisa de uma imagem (PNG) no campo "Logo para Sobrepor". Ela irá gerar um fundo animado (baseado no conteúdo do vídeo) e aplicar seu logo com a animação de saída escolhida. O campo "Vinheta Principal" é ignorado para a finalização.</p>
+            </section>
+
             </div></div>
     
     <!-- Elemento do Tooltip -->

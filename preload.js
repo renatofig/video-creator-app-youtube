@@ -1,3 +1,5 @@
+// preload.js
+
 const { contextBridge, ipcRenderer } = require('electron');
 
 contextBridge.exposeInMainWorld('electronAPI', {
@@ -5,13 +7,14 @@ contextBridge.exposeInMainWorld('electronAPI', {
   selectFolder: () => ipcRenderer.invoke('select-folder'),
   selectFile: (options) => ipcRenderer.invoke('select-file', options),
   getUserDataPath: () => ipcRenderer.invoke('get-user-data-path'),
-  setStartupBehavior: (isEnabled) => ipcRenderer.send('set-startup-behavior', isEnabled), // Simplificado
+  setStartupBehavior: (isEnabled) => ipcRenderer.send('set-startup-behavior', isEnabled),
 
   // Controle da Automação
   showStartMenu: (options) => ipcRenderer.send('show-start-menu', options),
   startAutomation: (options) => ipcRenderer.send('start-automation', options),
   showStopMenu: () => ipcRenderer.send('show-stop-menu'),
   onAutomationStarted: (callback) => ipcRenderer.on('automation-started', () => callback()),
+  onAutomationStopped: (callback) => ipcRenderer.on('automation-stopped', () => callback()),
   onVideoComplete: (callback) => ipcRenderer.on('video-complete', () => callback()),
   onAutomationError: (callback) => ipcRenderer.on('automation-error', () => callback()),
   
@@ -33,4 +36,6 @@ contextBridge.exposeInMainWorld('electronAPI', {
   // Autenticação YouTube
   youtubeLogin: (credentials) => ipcRenderer.send('youtube-login', credentials),
   youtubeLogout: () => ipcRenderer.send('youtube-logout'),
+  getYoutubePlaylists: (config) => ipcRenderer.send('get-youtube-playlists', config),
+  onYouTubePlaylistsLoaded: (callback) => ipcRenderer.on('youtube-playlists-loaded', (_event, playlists) => callback(playlists)),
 });
